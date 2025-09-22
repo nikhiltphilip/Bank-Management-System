@@ -4,6 +4,7 @@ from otp import OtpManager
 from database_manager import DatabaseManager
 from account_number import AccountNumber
 
+OTP_EXPIRY_TIME = 30
 
 class Signup:
     def __init__(self):
@@ -59,7 +60,7 @@ class Signup:
             end_time = time.time()
             elapsed_time = end_time - start_time
             if self.db.verify_and_update_user(user_id, entered_otp):
-                if elapsed_time > 5:
+                if elapsed_time > OTP_EXPIRY_TIME :
                     print("OTP Expired ")
                     continue
                 else:
@@ -159,7 +160,7 @@ class Signup:
             elapsed_time = end_time - start_time
 
             if self.db.verify_user_details(user_id, entered_otp):
-                if elapsed_time > 5:
+                if elapsed_time > OTP_EXPIRY_TIME :
                     print("OTP Expired")
                     input("Press enter to Generate new OTP....")
                     continue
