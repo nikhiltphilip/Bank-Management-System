@@ -98,7 +98,71 @@ def create_user_details_table():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+def create_account_details():
+    conn = get_db_connection()
+    if not conn:
+        print("Failed to connect to the database")
+        sys.exit(1)
+    cursor = get_cursor(conn)
+    if not cursor:
+        print("Failed to create cursor")
+        close_db(conn)
+        sys.exit(1)
+    try:
+        create_account_details_query = """
+                create table if not exists account_details (
+                ac_no int primary key,
+                name varchar(20),
+                balance float,
+                status varchar(20) default 'Deactive',
+                foreign key(ac_no) references users_details(ac_no)
+        )
+        """
+        cursor.execute(create_account_details_query)
+        conn.commit()
+        print("Account Details table created successfully")
+    except mariadb.Error as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        close_db(conn,cursor)
+def create_transaction_details():
+    conn = get_db_connection()
+    if not conn:
+        print("Failed to connect to the database")
+        sys.exit(1)
+    cursor = get_cursor(conn)
+    if not cursor:
+        print("Failed to create cursor")
+        close_db(conn)
+        sys.exit(1)
+    try:
+        create_transaction_details_query = """
+                create table if not exists transaction_details (
+                ac_no int primary key,
+                name varchar(20),
+                transaction_id int unique,
+                transaction_type varchar(20),
+                credit float,
+                debit float,
+                balance_before float,
+                balance_after float,
+                transaction_at timestamp  default current_timestamp,
+                status varchar(20),
+                foreign key(ac_no) references account_details(ac_no)
+        )
+        """
+        cursor.execute(create_transaction_details_query)
+        conn.commit()
+        print("Transaction Details table created successfully")
+    except mariadb.Error as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        close_db(conn,cursor)
 
 if __name__ == "__main__":
-    create_table()
+    create_table()   
     create_user_details_table()
+    create_account_details()
+    create_transaction_details()

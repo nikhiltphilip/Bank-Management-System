@@ -3,6 +3,7 @@ from validators import UserValidator
 from otp import OtpManager
 from database_manager import DatabaseManager
 from account_number import AccountNumber
+from transaction_manager import TransactionManager
 
 OTP_EXPIRY_TIME = 30
 
@@ -12,6 +13,7 @@ class Signup:
         self.db = DatabaseManager()
         self.otp_manager = OtpManager()
         self.ac = AccountNumber()
+        self.tm = TransactionManager()
 
     def display(self):
         print("==== CLI Based Bank Management System ====")
@@ -171,6 +173,8 @@ class Signup:
                         details = self.collect_user_detail(email=email, phone=phone)
                         self.db.update_users_details(details, user_id)
                         user_details = self.db.display_details(user_id)
+                        if user_details:
+                            self.tm.temp_update_account_details(user_details['ac_no'])
                         if user_details:
                             print("=== User Profile ===")
                             print(f"Account Number: {user_details['ac_no']}")
