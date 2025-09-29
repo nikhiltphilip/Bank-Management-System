@@ -2,7 +2,9 @@ import mariadb
 import sys
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
+
 
 def get_db_connection():
     user = os.getenv("DB_USER")
@@ -18,13 +20,10 @@ def get_db_connection():
     port = int(port_str)
 
     conn = mariadb.connect(
-        user=user,
-        password=password,
-        host=host,
-        port=port,
-        database=database
+        user=user, password=password, host=host, port=port, database=database
     )
     return conn
+
 
 def get_cursor(conn):
     try:
@@ -139,6 +138,8 @@ def create_account_details():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+
+
 def create_table_deposit():
     conn = get_db_connection()
     if not conn:
@@ -169,6 +170,8 @@ def create_table_deposit():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+
+
 def create_cash_withdrawn():
     conn = get_db_connection()
     if not conn:
@@ -198,6 +201,7 @@ def create_cash_withdrawn():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+
 
 def create_table_send_money():
     conn = get_db_connection()
@@ -230,6 +234,7 @@ def create_table_send_money():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+
 
 def create_transactions():
     conn = get_db_connection()
@@ -274,5 +279,3 @@ if __name__ == "__main__":
     create_table_deposit()
     create_cash_withdrawn()
     create_table_send_money()
-
-
