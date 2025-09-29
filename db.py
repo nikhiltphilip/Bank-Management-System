@@ -66,6 +66,7 @@ def create_table():
     finally:
         close_db(conn, cursor)
 
+
 def create_user_details_table():
     conn = get_db_connection()
     if not conn:
@@ -98,6 +99,8 @@ def create_user_details_table():
         sys.exit(1)
     finally:
         close_db(conn, cursor)
+
+
 def create_account_details():
     conn = get_db_connection()
     if not conn:
@@ -113,8 +116,7 @@ def create_account_details():
                 create table if not exists account_details (
                 ac_no int primary key,
                 name varchar(20),
-                balance float,
-                status varchar(20) default 'Deactive',
+                balance float default 0,
                 foreign key(ac_no) references users_details(ac_no)
         )
         """
@@ -125,8 +127,8 @@ def create_account_details():
         print(f"Error: {e}")
         sys.exit(1)
     finally:
-        close_db(conn,cursor)
-def create_transaction_details():
+        close_db(conn, cursor)
+def create_table_deposit():
     conn = get_db_connection()
     if not conn:
         print("Failed to connect to the database")
@@ -137,32 +139,129 @@ def create_transaction_details():
         close_db(conn)
         sys.exit(1)
     try:
-        create_transaction_details_query = """
-                create table if not exists transaction_details (
-                ac_no int primary key,
-                name varchar(20),
-                transaction_id int unique,
-                transaction_type varchar(20),
-                credit float,
-                debit float,
-                balance_before float,
-                balance_after float,
-                transaction_at timestamp  default current_timestamp,
-                status varchar(20),
-                foreign key(ac_no) references account_details(ac_no)
+        create_table_deposit_query = """
+        create table if not exists deposit(
+            transaction_id int primary key,
+            account_number int,
+            deposit_type varchar(15),
+            deposited_amount float,
+            balance float,
+            deposited_at timestamp default current_timestamp,
+            foreign key(account_number) references account_details(ac_no)
         )
         """
-        cursor.execute(create_transaction_details_query)
+        cursor.execute(create_table_deposit_query)
         conn.commit()
-        print("Transaction Details table created successfully")
+        print("deposits table created successfully!")
     except mariadb.Error as e:
         print(f"Error: {e}")
         sys.exit(1)
     finally:
-        close_db(conn,cursor)
+        close_db(conn, cursor)
+def create_cash_withdrawn():
+    conn = get_db_connection()
+    if not conn:
+        print("Failed to connect to the database")
+        sys.exit(1)
+    cursor = get_cursor(conn)
+    if not cursor:
+        print("Failed to create cursor")
+        close_db(conn)
+        sys.exit(1)
+    try:
+        create_table_withdraw_query = """
+        create table if not exists cash_withdrawn(
+            transaction_id int primary key,
+            account_number int,
+            withdrawn_amount float,
+            balance float,
+            withdrawn_at timestamp default current_timestamp,
+            foreign key(account_number) references account_details(ac_no)
+        )
+        """
+        cursor.execute(create_table_withdraw_query)
+        conn.commit()
+        print("cash_withdrawn table created successfully!")
+    except mariadb.Error as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        close_db(conn, cursor)
+
+def create_table_send_money():
+    conn = get_db_connection()
+    if not conn:
+        print("Failed to connect to the database")
+        sys.exit(1)
+    cursor = get_cursor(conn)
+    if not cursor:
+        print("Failed to create cursor")
+        close_db(conn)
+        sys.exit(1)
+    try:
+        create_table_send_money_query = """
+        create table if not exists send_money(
+            transaction_id int primary key,
+            sender_account_no int,
+            receiver_account_no int,
+            amount_sent float,
+            balance float,
+            sent_at timestamp default current_timestamp,
+            foreign key(sender_account_no) references account_details(ac_no),
+            foreign key(receiver_account_no) references account_details(ac_no)
+        )
+        """
+        cursor.execute(create_table_send_money_query)
+        conn.commit()
+        print("send money table created successfully!")
+    except mariadb.Error as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        close_db(conn, cursor)
+
+def create_transactions():
+    conn = get_db_connection()
+    if not conn:
+        print("Failed to connect to the database")
+        sys.exit(1)
+    cursor = get_cursor(conn)
+    if not cursor:
+        print("Failed to create cursor")
+        close_db(conn)
+        sys.exit(1)
+    try:
+        create_transactions_query = """
+                create table if not exists transactions (
+                id int auto_increment primary key,
+                transaction_id int ,
+                account_no int ,
+                transaction_type varchar(20),
+                credit float,
+                debit float,
+                before_balance float,
+                after_balance float,
+                created_at timestamp default current_timestamp,
+                foreign key(account_no) references account_details(ac_no)
+        )
+        """
+        cursor.execute(create_transactions_query)
+        conn.commit()
+        print("transactions table created successfully")
+    except mariadb.Error as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    finally:
+        close_db(conn, cursor)
+
 
 if __name__ == "__main__":
-    create_table()   
+    create_table()
     create_user_details_table()
     create_account_details()
-    create_transaction_details()
+    create_transactions()
+    create_table_deposit()
+    create_cash_withdrawn()
+    create_table_send_money()
+
+
