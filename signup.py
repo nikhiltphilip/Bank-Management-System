@@ -151,9 +151,9 @@ class Signup:
             balance, status = result
             if balance < 1000 and status == "Inactive":
                 self.tm.activate_account(ac_no)
-            print()
-            print()
             while True:
+                print()
+                print()
                 print("===Transaction Menu===")
                 print("1.Deposit")
                 print("2.Withdraw")
