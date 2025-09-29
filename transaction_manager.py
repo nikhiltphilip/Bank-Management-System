@@ -70,6 +70,7 @@ class TransactionManager:
         print("2.Cheque")
         print("3.Demand Draft")
         choice = int(input("Enter Your Choice: "))
+        deposit_type = ""
         while True:
             if choice == 1:
                 deposit_type = "Cash"
@@ -217,7 +218,6 @@ class TransactionManager:
                 sender_before_balance = sender_balance_result[0]
                 receiver_before_balance = receiver_balance_result[0]
                 new_sender_balance = sender_before_balance - amount
-                new_receiver_balance = receiver_before_balance + amount
                 cursor.execute(
                     "INSERT INTO send_money (transaction_id, sender_account_no, receiver_account_no, amount_sent, balance) VALUES (%s, %s, %s, %s, %s)",
                     (transaction_id, ac_no, receiver_ac_no, amount, new_sender_balance),

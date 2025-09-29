@@ -37,13 +37,13 @@ def close_db(conn, cursor=None):
     if cursor:
         try:
             cursor.close()
-        except:
-            pass
+        except Exception as e:
+            print(f"Error: {e}")
     if conn:
         try:
             conn.close()
-        except:
-            pass
+        except Exception as e:
+            print(f"Error: {e}")
 
 
 def create_table():
