@@ -267,6 +267,4 @@ class Signup:
                 break
             else:
                 print("Invalid Input please try again")
-            input("Press Enter to continue...")
-            print()
-            print()
+            input("Press Enter to continue...\n\n")

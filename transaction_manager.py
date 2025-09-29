@@ -82,6 +82,7 @@ class TransactionManager:
                 break
             else:
                 print("Invalid Input")
+                break
         try:
             amount = float(input("Enter the amount to deposit: "))
         except ValueError:
@@ -180,7 +181,7 @@ class TransactionManager:
         print()
         print()
         while True:
-            receiver_ac_no = int(input("Enter 11 digit Receivers Account Number: "))
+            receiver_ac_no = int(input("Enter 10 digit Receivers Account Number: "))
             if not self.check_ac_no(receiver_ac_no):
                 print("The Receivers Account number Not found")
                 continue

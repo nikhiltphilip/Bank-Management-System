@@ -14,7 +14,7 @@ class AccountNumber:
             return None
 
         try:
-            account_number = 10000000001
+            account_number = 1000000001
 
             while True:
                 cursor.execute("""

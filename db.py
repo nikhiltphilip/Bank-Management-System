@@ -127,6 +127,7 @@ def create_account_details():
                 ac_no int primary key,
                 name varchar(20),
                 balance float default 0,
+                status varchar(10) default 'Inactive',
                 foreign key(ac_no) references users_details(ac_no)
         )
         """
